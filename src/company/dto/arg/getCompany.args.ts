@@ -6,5 +6,5 @@ export class GetCompanyArgs {
     @Field()
     @IsNumber()
     @IsNotEmpty()
-    id: number;
+    id: string;
 }

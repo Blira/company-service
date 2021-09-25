@@ -3,7 +3,7 @@ import { IsArray } from "class-validator";
 
 @ArgsType()
 export class GetCompaniesArgs {
-    @Field(() => [Number], { nullable: true })
+    @Field(() => [String], { nullable: true })
     @IsArray()
-    ids?: number[];
+    ids?: string[];
 }

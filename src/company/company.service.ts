@@ -3,6 +3,7 @@ import { Company } from "./company.model";
 import { GetCompaniesArgs } from "./dto/arg/getCompanies.args";
 import { GetCompanyArgs } from "./dto/arg/getCompany.args";
 import { CreateCompanyInput } from "./dto/input/createCompany.input";
+import { v4 } from 'uuid'
 
 @Injectable()
 export default class CompanyService {
@@ -10,9 +11,8 @@ export default class CompanyService {
 
 
     public createCompany(createCompanyData: CreateCompanyInput) {
-        const id = this.companies.length + 1;
         const newCompany: Company = {
-            id,
+            id: v4(),
             active: true,
             plan: 0,
             name: createCompanyData.name,
@@ -23,7 +23,7 @@ export default class CompanyService {
     }
 
     public getCompanies(getCompaniesArgs: GetCompaniesArgs) {
-        if(!getCompaniesArgs.ids){
+        if (!getCompaniesArgs.ids) {
             return this.companies;
         }
         return this.companies.filter(currentCompany => getCompaniesArgs.ids.includes(currentCompany.id));
