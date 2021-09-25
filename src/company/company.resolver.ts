@@ -26,7 +26,6 @@ export class CompanyResolver {
         return this.companyService.createCompany(createCompanyData);
     }
 
-
     @Mutation(() => Company)
     updateCompany(@Args('updateCompanyData') updateCompanyData: UpdateCompanyInput): Company {
         return this.companyService.updateCompany(updateCompanyData);
