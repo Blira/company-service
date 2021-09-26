@@ -1,4 +1,5 @@
-export declare class Company {
+
+export interface CompanyInterface {
     id: string;
     name: string;
     description?: string;

@@ -16,7 +16,7 @@ export class CompanyResolver {
         return this.companyService.getCompany(getCompanyArgs);
     }
 
-    @Query(() => [Company], { name: 'companies', nullable: 'itemsAndList' })
+    @Query(() => [Company], { name: 'companies', nullable: 'items' })
     getCompanies(@Args() getCompaniesArgs: GetCompaniesArgs): Promise<Company[]> {
         return this.companyService.getCompanies(getCompaniesArgs);
     }

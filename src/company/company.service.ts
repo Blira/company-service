@@ -1,64 +1,32 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { GetCompaniesArgs } from "./dto/arg/getCompanies.args";
 import { GetCompanyArgs } from "./dto/arg/getCompany.args";
 import { CreateCompanyInput } from "./dto/input/createCompany.input";
 import { UpdateCompanyInput } from "./dto/input/updateCompany.input";
 
 import { v4 } from 'uuid'
-import { PrismaClient } from '@prisma/client'
+import CompanyRepository from "./company.repository";
 
 @Injectable()
 export default class CompanyService {
-    private prisma: PrismaClient;
 
-    constructor() {
-        this.prisma = new PrismaClient();
-    }
+    constructor(private readonly companyRepository: CompanyRepository) {}
 
     public getCompanies(getCompaniesArgs: GetCompaniesArgs) {
-        if (!getCompaniesArgs.ids) {
-            return this.prisma.company.findMany();
-        }
-        return this.prisma.company.findMany({
-            where: { id: { in: getCompaniesArgs.ids } }
-        });
-    }
+        return this.companyRepository.getCompanies(getCompaniesArgs);
+    };
 
     public getCompany(getCompanyArgs: GetCompanyArgs) {
-        return this.prisma.company.findFirst({
-            where: { id: getCompanyArgs.id }
-        })
+        return this.companyRepository.getCompany(getCompanyArgs);
     }
 
     public async createCompany(createCompanyData: CreateCompanyInput) {
-        const newCompany = await this.prisma.company.create({
-            data: {
-                id: v4(),
-                name: createCompanyData.name,
-                description: createCompanyData.description
-            }
-        });
-        return newCompany;
+        return this.companyRepository.createCompany(createCompanyData);
     }
 
 
     public async updateCompany(updateCompanyInput: UpdateCompanyInput) {
-        const companyToUpdate = await this.prisma.company.count({
-            where: { id: updateCompanyInput.id }
-        });
-
-        if (companyToUpdate < 1) {
-            throw new Error('Company not found');
-        };
-
-        const updatedCompany = await this.prisma.company.update({
-            where: { id: updateCompanyInput.id },
-            data: {
-                name: updateCompanyInput.name,
-                description: updateCompanyInput.description
-            }
-        });
-        return updatedCompany;
+        return this.companyRepository.updateCompany(updateCompanyInput);
     }
 
 
