@@ -9,25 +9,25 @@ import { UpdateCompanyInput } from "./dto/input/updateCompany.input";
 @Resolver(() => Company)
 export class CompanyResolver {
 
-    constructor(private readonly companyService: CompanyService) {}
+    constructor(private readonly companyService: CompanyService) { }
 
-    @Query(() => Company, {name: 'company', nullable: true})
-    getCompany(@Args() getCompanyArgs: GetCompanyArgs): Company {
+    @Query(() => Company, { name: 'company', nullable: true })
+    getCompany(@Args() getCompanyArgs: GetCompanyArgs): Promise<Company> {
         return this.companyService.getCompany(getCompanyArgs);
     }
 
-    @Query(() => [Company], {name: 'companies', nullable: 'itemsAndList'})
-    getCompanies(@Args() getCompaniesArgs: GetCompaniesArgs): Company[] {
+    @Query(() => [Company], { name: 'companies', nullable: 'itemsAndList' })
+    getCompanies(@Args() getCompaniesArgs: GetCompaniesArgs): Promise<Company[]> {
         return this.companyService.getCompanies(getCompaniesArgs);
     }
 
     @Mutation(() => Company)
-    createCompany(@Args('createCompanyData') createCompanyData: CreateCompanyInput): Company {
+    createCompany(@Args('createCompanyData') createCompanyData: CreateCompanyInput): Promise<Company> {
         return this.companyService.createCompany(createCompanyData);
     }
 
     @Mutation(() => Company)
-    updateCompany(@Args('updateCompanyData') updateCompanyData: UpdateCompanyInput): Company {
+    updateCompany(@Args('updateCompanyData') updateCompanyData: UpdateCompanyInput): Promise<Company> {
         return this.companyService.updateCompany(updateCompanyData);
     }
 }
