@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { Company } from "./company.model";
 import { GetCompaniesArgs } from "./dto/arg/getCompanies.args";
 import { GetCompanyArgs } from "./dto/arg/getCompany.args";
 import { CreateCompanyInput } from "./dto/input/createCompany.input";
