@@ -9,7 +9,8 @@ import { UpdateCompanyInput } from "./dto/input/updateCompany.input";
 @Resolver(() => Company)
 export class CompanyResolver {
 
-    constructor(private readonly companyService: CompanyService) { }
+    constructor(private readonly companyService: CompanyService) {}
+
 
     @Query(() => Company, { name: 'company', nullable: true })
     getCompany(@Args() getCompanyArgs: GetCompanyArgs): Promise<Company> {

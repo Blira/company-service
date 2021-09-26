@@ -1,16 +1,35 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable, OnModuleInit } from "@nestjs/common";
 import { GetCompaniesArgs } from "./dto/arg/getCompanies.args";
 import { GetCompanyArgs } from "./dto/arg/getCompany.args";
 import { CreateCompanyInput } from "./dto/input/createCompany.input";
 import { UpdateCompanyInput } from "./dto/input/updateCompany.input";
-
-import { v4 } from 'uuid'
 import CompanyRepository from "./company.repository";
+import { Client, ClientKafka, MessagePattern, Payload, Transport } from "@nestjs/microservices";
 
 @Injectable()
-export default class CompanyService {
+export default class CompanyService implements OnModuleInit {
 
-    constructor(private readonly companyRepository: CompanyRepository) {}
+    constructor(private readonly companyRepository: CompanyRepository) { }
+
+    @Client({
+        transport: Transport.KAFKA,
+        options: {
+            client: {
+                clientId: 'company-service',
+                brokers: [process.env.KAFKA_BROKER],
+            },
+            producer: {
+                allowAutoTopicCreation: true
+            }
+        }
+    })
+    client: ClientKafka;
+
+    async onModuleInit() {
+        this.client.subscribeToResponseOf('company_created');
+        this.client.subscribeToResponseOf('company_updated');
+        await this.client.connect();
+    }
 
     public getCompanies(getCompaniesArgs: GetCompaniesArgs) {
         return this.companyRepository.getCompanies(getCompaniesArgs);
@@ -21,12 +40,16 @@ export default class CompanyService {
     }
 
     public async createCompany(createCompanyData: CreateCompanyInput) {
-        return this.companyRepository.createCompany(createCompanyData);
+        const createdCompany = await this.companyRepository.createCompany(createCompanyData);
+        this.client.send('company_created', createdCompany).subscribe();
+        return createdCompany;
     }
 
 
     public async updateCompany(updateCompanyInput: UpdateCompanyInput) {
-        return this.companyRepository.updateCompany(updateCompanyInput);
+        const updatedCompany = await this.companyRepository.updateCompany(updateCompanyInput);
+        this.client.send('company_updated', updatedCompany).subscribe();
+        return updatedCompany;
     }
 
 
