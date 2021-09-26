@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 import { GetCompaniesArgs } from "./dto/arg/getCompanies.args";
 import { GetCompanyArgs } from "./dto/arg/getCompany.args";
 import { CreateCompanyInput } from "./dto/input/createCompany.input";
+import { DeleteCompanyInput } from "./dto/input/deleteCompany.input";
 import { UpdateCompanyInput } from "./dto/input/updateCompany.input";
 
 export default class CompanyRepository {
@@ -11,7 +12,7 @@ export default class CompanyRepository {
     constructor() {
         this.prisma = new PrismaClient();
     }
-    
+
     public getCompanies(getCompaniesArgs: GetCompaniesArgs) {
         if (!getCompaniesArgs.ids) {
             return this.prisma.company.findMany();
@@ -57,6 +58,21 @@ export default class CompanyRepository {
             }
         });
         return updatedCompany;
+    }
+
+    public async deleteCompany(deleteCompanyInput: DeleteCompanyInput) {
+        const companyToDelete = await this.prisma.company.count({
+            where: { id: deleteCompanyInput.id }
+        });
+
+        if (companyToDelete < 1) {
+            throw new Error('Company not found');
+        };
+
+        const deletedCompany = await this.prisma.company.delete({
+            where: { id: deleteCompanyInput.id },
+        });
+        return deletedCompany;
     }
 
 }

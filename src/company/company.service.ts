@@ -5,6 +5,7 @@ import { CreateCompanyInput } from "./dto/input/createCompany.input";
 import { UpdateCompanyInput } from "./dto/input/updateCompany.input";
 import CompanyRepository from "./company.repository";
 import { Client, ClientKafka, MessagePattern, Payload, Transport } from "@nestjs/microservices";
+import { DeleteCompanyInput } from "./dto/input/deleteCompany.input";
 
 @Injectable()
 export default class CompanyService implements OnModuleInit {
@@ -28,6 +29,7 @@ export default class CompanyService implements OnModuleInit {
     async onModuleInit() {
         this.client.subscribeToResponseOf('company_created');
         this.client.subscribeToResponseOf('company_updated');
+        this.client.subscribeToResponseOf('company_deleted');
         await this.client.connect();
     }
 
@@ -50,6 +52,13 @@ export default class CompanyService implements OnModuleInit {
         const updatedCompany = await this.companyRepository.updateCompany(updateCompanyInput);
         this.client.send('company_updated', updatedCompany).subscribe();
         return updatedCompany;
+    }
+
+
+    public async deleteCompany(deleteCompanyInput: DeleteCompanyInput) {
+        const deletedCompany = await this.companyRepository.deleteCompany(deleteCompanyInput);
+        this.client.send('company_deleted', deletedCompany).subscribe();
+        return deletedCompany;
     }
 
 

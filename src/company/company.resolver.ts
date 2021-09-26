@@ -4,12 +4,13 @@ import CompanyService from "./company.service";
 import { GetCompaniesArgs } from "./dto/arg/getCompanies.args";
 import { GetCompanyArgs } from "./dto/arg/getCompany.args";
 import { CreateCompanyInput } from "./dto/input/createCompany.input";
+import { DeleteCompanyInput } from "./dto/input/deleteCompany.input";
 import { UpdateCompanyInput } from "./dto/input/updateCompany.input";
 
 @Resolver(() => Company)
 export class CompanyResolver {
 
-    constructor(private readonly companyService: CompanyService) {}
+    constructor(private readonly companyService: CompanyService) { }
 
 
     @Query(() => Company, { name: 'company', nullable: true })
@@ -30,5 +31,10 @@ export class CompanyResolver {
     @Mutation(() => Company)
     updateCompany(@Args('updateCompanyData') updateCompanyData: UpdateCompanyInput): Promise<Company> {
         return this.companyService.updateCompany(updateCompanyData);
+    }
+
+    @Mutation(() => Company)
+    deleteCompany(@Args('deleteCompanyData') deleteCompanyInput: DeleteCompanyInput): Promise<Company> {
+        return this.companyService.deleteCompany(deleteCompanyInput);
     }
 }
