@@ -14,7 +14,6 @@ const uuid_1 = require("uuid");
 const client_1 = require("@prisma/client");
 let CompanyService = class CompanyService {
     constructor() {
-        this.companies = [];
         this.prisma = new client_1.PrismaClient();
     }
     getCompanies(getCompaniesArgs) {

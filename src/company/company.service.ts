@@ -10,7 +10,6 @@ import { PrismaClient } from '@prisma/client'
 
 @Injectable()
 export default class CompanyService {
-    private companies: Company[] = [];
     private prisma: PrismaClient;
 
     constructor() {

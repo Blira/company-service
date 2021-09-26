@@ -3,7 +3,6 @@ import { GetCompanyArgs } from "./dto/arg/getCompany.args";
 import { CreateCompanyInput } from "./dto/input/createCompany.input";
 import { UpdateCompanyInput } from "./dto/input/updateCompany.input";
 export default class CompanyService {
-    private companies;
     private prisma;
     constructor();
     getCompanies(getCompaniesArgs: GetCompaniesArgs): import(".prisma/client").PrismaPromise<import(".prisma/client").company[]>;
