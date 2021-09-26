@@ -1,0 +1,2 @@
+1 - [] -- Make service depend on repository INTERFACE. 
+2 - [] -- MOve logic from repository to service. repository should only interact with database !!!!!
